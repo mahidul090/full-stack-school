@@ -26,10 +26,10 @@ model Student {
   createdAt   DateTime     @default(now())
   parentId    String
   parent      Parent       @relation(fields: [parentId], references: [id])
-  classId     Int
-  class       Class        @relation(fields: [classId], references: [id])
-  gradeId     Int
-  grade       Grade        @relation(fields: [gradeId], references: [id])
+  technologyId Int
+  technology  Technology   @relation(fields: [technologyId], references: [id])
+  semesterId  Int
+  semester    Semester     @relation(fields: [semesterId], references: [id])
   attendances Attendance[]
   results     Result[]
   birthday    DateTime
@@ -49,7 +49,7 @@ model Teacher {
   createdAt DateTime  @default(now())
   subjects  Subject[]
   lessons   Lesson[]
-  classes   Class[]
+  technologies Technology[]
   birthday  DateTime
 }
 
@@ -65,15 +65,15 @@ model Parent {
   students  Student[]
 }
 
-model Grade {
+model Semester {
   id    Int @id @default(autoincrement())
-  level Int @unique
+  name  String @unique
 
   students Student[]
-  classess Class[]
+  technologies Technology[]
 }
 
-model Class {
+model Technology {
   id       Int    @id @default(autoincrement())
   name     String @unique
   capacity Int
@@ -82,8 +82,8 @@ model Class {
   supervisor    Teacher?       @relation(fields: [supervisorId], references: [id])
   lessons       Lesson[]
   students      Student[]
-  gradeId       Int
-  grade         Grade          @relation(fields: [gradeId], references: [id])
+  semesterId    Int
+  semester      Semester       @relation(fields: [semesterId], references: [id])
   events        Event[]
   announcements Announcement[]
 }
@@ -104,8 +104,8 @@ model Lesson {
 
   subjectId   Int
   subject     Subject      @relation(fields: [subjectId], references: [id])
-  classId     Int
-  class       Class        @relation(fields: [classId], references: [id])
+  technologyId Int
+  technology  Technology   @relation(fields: [technologyId], references: [id])
   teacherId   String
   teacher     Teacher      @relation(fields: [teacherId], references: [id])
   exams       Exam[]
@@ -165,8 +165,8 @@ model Event {
   startTime   DateTime
   endTime     DateTime
 
-  classId Int?
-  class   Class? @relation(fields: [classId], references: [id])
+  technologyId Int?
+  technology   Technology? @relation(fields: [technologyId], references: [id])
 }
 
 model Announcement {
@@ -175,8 +175,8 @@ model Announcement {
   description String
   date        DateTime
 
-  classId Int?
-  class   Class? @relation(fields: [classId], references: [id])
+  technologyId Int?
+  technology   Technology? @relation(fields: [technologyId], references: [id])
 }
 
 enum UserSex {

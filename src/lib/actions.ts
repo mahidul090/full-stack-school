@@ -13,6 +13,37 @@ import { clerkClient } from "@clerk/nextjs/server";
 
 type CurrentState = { success: boolean; error: boolean };
 
+export const updateAttendance = async (
+  studentId: string,
+  date: Date,
+  present: boolean
+) => {
+  try {
+    await prisma.attendance.upsert({
+      where: {
+        studentId_date: {
+          studentId,
+          date,
+        },
+      },
+      update: {
+        present,
+      },
+      create: {
+        studentId,
+        date,
+        present,
+        lessonId: 1, // You might want to make this dynamic based on the lesson
+      },
+    });
+    
+    return { success: true, error: false };
+  } catch (error) {
+    console.error("Failed to update attendance:", error);
+    throw error;
+  }
+};
+
 export const createSubject = async (
   currentState: CurrentState,
   data: SubjectSchema
